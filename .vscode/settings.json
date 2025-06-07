@@ -1,9 +1,15 @@
 {
   // Haskell Language Server configuration
-  "haskell.manageHLS": "PATH",
-  "haskell.serverExecutablePath": "/opt/homebrew/bin/haskell-language-server-wrapper",
+  "haskell.serverExecutablePath": "/Users/gura105/.ghcup/bin/haskell-language-server-wrapper-2.10.0.0",
+  "haskell.manageHLS": "GHCup",
   "haskell.serverExtraArgs": "",
-  
+  "haskell.serverEnvironment": {
+    "PATH": "${HOME}/.ghcup/bin:$PATH"
+  },
+  "haskell.trace.server": "messages",
+  "haskell.ghcupExecutablePath": "/Users/gura105/.ghcup/bin/ghcup",
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.runInTerminal": true,
   // Enable detailed diagnostics
   "haskell.maxNumberOfProblems": 100,
   "haskell.diagnosticsOnChange": true,
@@ -11,6 +17,8 @@
   // Code formatting
   "haskell.formattingProvider": "ormolu",
   "editor.formatOnSave": false,
+  "ormolu.path": "/Users/gura105/.ghcup/bin/ormolu",
+  "ormolu.args": ["--no-cabal"],
   
   // File associations for Haskell
   "files.associations": {
@@ -26,7 +34,9 @@
     "editor.detectIndentation": false,
     "editor.wordWrap": "on",
     "editor.rulers": [80, 100],
-    "editor.semanticHighlighting.enabled": true
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "sjurmillidahl.ormolu-vscode",
   },
   
   // Search settings
@@ -44,12 +54,21 @@
   
   // Terminal integration - put ghcup first in PATH
   "terminal.integrated.env.osx": {
-    "PATH": "${env:HOME}/.ghcup/bin:${env:HOME}/.local/bin:${env:PATH}"
+    "PATH": "/Users/gura105/.ghcup/bin:${env:HOME}/.local/bin:/Users/gura105/.volta/tools/image/pnpm/10.11.0/bin:/Users/gura105/.volta/tools/image/node/24.0.2/bin:/Users/gura105/.volta/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"
   },
   
+  // Global environment variables for all extensions
+  "terminal.integrated.inheritEnv": false,
+  
+  // Haskell extension PATH configuration
+  "haskell.cabalExecutablePath": "/Users/gura105/.ghcup/bin/cabal",
+  "haskell.ghcExecutablePath": "/Users/gura105/.ghcup/bin/ghc",
+  
   // HLint integration
-  "haskell.plugin.hlint.diagnosticsOnChange": true,
+  "haskell.hlint.executablePath": "/Users/gura105/.ghcup/bin/hlint",
+  "haskell.plugin.hlint.diagnosticsOn": true,
   "haskell.plugin.hlint.codeActionsOn": true,
+  "haskell.plugin.hlint.diagnosticsOnChange": true,
   
   // Import management
   "haskell.plugin.importLens.codeActionsOn": true,

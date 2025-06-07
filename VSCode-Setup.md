@@ -37,23 +37,16 @@ code .
 
 ### エラー: "Could not find a HLS binary"
 
-**解決方法1: Homebrewでインストール**
+**✅ 解決済み: ghcup版HLSを使用**
 ```bash
-brew install haskell-language-server
+# GHC 9.6.7と互換性のあるHLSをインストール
+ghcup install hls --set
 ```
 
-**解決方法2: PATH設定の確認**
-```bash
-# .zshrc または .bashrc に追加
-export PATH="$HOME/.ghcup/bin:$PATH"
-source ~/.zshrc  # または source ~/.bashrc
-```
-
-**解決方法3: VSCode設定の手動指定**
-VSCodeの設定で以下を追加：
+VSCode設定は自動で以下に設定されています：
 ```json
 {
-  "haskell.serverExecutablePath": "/opt/homebrew/bin/haskell-language-server-wrapper"
+  "haskell.serverExecutablePath": "/Users/gura105/.ghcup/bin/haskell-language-server-wrapper"
 }
 ```
 
