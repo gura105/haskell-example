@@ -1,11 +1,13 @@
 module TaskManager.Controller.TaskController
-  ( TaskController
+  ( TaskController(..)
   , newController
   , addTask
   , addTaskIO
   , completeTask
   , deleteTask
   , updateTaskPriority
+  , updateTaskStatus
+  , updateTaskTitle
   , getTasks
   , getTask
   ) where
@@ -64,6 +66,22 @@ updateTaskPriority taskId priority controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
         | getTaskId task == taskId = setPriority priority task
+        | otherwise = task
+  in controller { tasks = updatedTasks }
+
+updateTaskStatus :: TaskId -> Status -> TaskController -> TaskController
+updateTaskStatus taskId status controller =
+  let updatedTasks = map updateIfMatch (tasks controller)
+      updateIfMatch task
+        | getTaskId task == taskId = setStatus status task
+        | otherwise = task
+  in controller { tasks = updatedTasks }
+
+updateTaskTitle :: TaskId -> String -> TaskController -> TaskController
+updateTaskTitle taskId title controller =
+  let updatedTasks = map updateIfMatch (tasks controller)
+      updateIfMatch task
+        | getTaskId task == taskId = setTitle title task
         | otherwise = task
   in controller { tasks = updatedTasks }
 
