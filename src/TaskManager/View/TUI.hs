@@ -10,8 +10,6 @@ import Brick.Widgets.Center
 import Brick.Widgets.List
 import qualified Graphics.Vty as V
 import qualified Data.Vector as Vec
-import Data.Time
-import Control.Monad.IO.Class
 import Control.Monad
 
 import TaskManager.Model.Task
@@ -85,8 +83,8 @@ drawHeader =
 
 drawTaskList :: AppState -> Widget ResourceName
 drawTaskList st = 
-  let tasks = getTasks (appController st)
-      taskVec = Vec.fromList tasks
+  let taskList = getTasks (appController st)
+      taskVec = Vec.fromList taskList
       updatedList = listReplace taskVec Nothing (appTaskList st)
       hasFocus = appMode st == ViewMode
   in vLimit 15 $ 
@@ -152,7 +150,7 @@ drawInputDialog st =
        ]
 
 drawHelp :: AppState -> Widget ResourceName
-drawHelp st =
+drawHelp _ =
   center $ 
   borderWithLabel (str "ヘルプ") $
   hLimit 60 $ vLimit 20 $
@@ -205,7 +203,7 @@ handleEvent ev = case ev of
       st <- get
       case appMode st of
         AddMode -> do
-          when (not $ null $ appInputText st) $ do
+          unless (null $ appInputText st) $ do
             let (newCtrl, _) = addTask (appInputText st) (appController st)
             modify $ \s -> s { appController = newCtrl }
             updateTaskList
@@ -223,6 +221,8 @@ handleEvent ev = case ev of
           'd' -> deleteSelectedTask
           'c' -> completeSelectedTask
           'p' -> cyclePriority
+          'k' -> moveListUp    -- Vim-like navigation
+          'j' -> moveListDown  -- Vim-like navigation
           _ -> return ()
         
         _ -> return ()
@@ -233,29 +233,8 @@ handleEvent ev = case ev of
         modify $ \s -> s { appInputText = 
           if null (appInputText s) then "" else init (appInputText s) }
     
-    V.EvKey V.KUp [] -> do
-      st <- get
-      when (appMode st == ViewMode) $ do
-        let newList = listMoveUp (appTaskList st)
-        modify $ \s -> s { appTaskList = newList }
-    
-    V.EvKey V.KDown [] -> do
-      st <- get
-      when (appMode st == ViewMode) $ do
-        let newList = listMoveDown (appTaskList st)
-        modify $ \s -> s { appTaskList = newList }
-    
-    V.EvKey (V.KChar 'k') [] -> do
-      st <- get
-      when (appMode st == ViewMode) $ do
-        let newList = listMoveUp (appTaskList st)
-        modify $ \s -> s { appTaskList = newList }
-    
-    V.EvKey (V.KChar 'j') [] -> do
-      st <- get
-      when (appMode st == ViewMode) $ do
-        let newList = listMoveDown (appTaskList st)
-        modify $ \s -> s { appTaskList = newList }
+    V.EvKey V.KUp [] -> moveListUp
+    V.EvKey V.KDown [] -> moveListDown
     
     _ -> return ()
   
@@ -265,17 +244,31 @@ handleEvent ev = case ev of
 updateTaskList :: EventM ResourceName AppState ()
 updateTaskList = do
   st <- get
-  let tasks = getTasks (appController st)
-      newList = listReplace (Vec.fromList tasks) Nothing (appTaskList st)
+  let taskList = getTasks (appController st)
+      newList = listReplace (Vec.fromList taskList) Nothing (appTaskList st)
   modify $ \s -> s { appTaskList = newList }
+
+moveListUp :: EventM ResourceName AppState ()
+moveListUp = do
+  st <- get
+  when (appMode st == ViewMode) $ do
+    let newList = listMoveUp (appTaskList st)
+    modify $ \s -> s { appTaskList = newList }
+
+moveListDown :: EventM ResourceName AppState ()
+moveListDown = do
+  st <- get
+  when (appMode st == ViewMode) $ do
+    let newList = listMoveDown (appTaskList st)
+    modify $ \s -> s { appTaskList = newList }
 
 deleteSelectedTask :: EventM ResourceName AppState ()
 deleteSelectedTask = do
   st <- get
   case listSelectedElement (appTaskList st) of
     Just (_, task) -> do
-      let taskId = getTaskId task
-          newCtrl = deleteTask taskId (appController st)
+      let currentTaskId = getTaskId task
+          newCtrl = deleteTask currentTaskId (appController st)
       modify $ \s -> s { appController = newCtrl }
       updateTaskList
     Nothing -> return ()
@@ -285,8 +278,8 @@ completeSelectedTask = do
   st <- get
   case listSelectedElement (appTaskList st) of
     Just (_, task) -> do
-      let taskId = getTaskId task
-          newCtrl = completeTask taskId (appController st)
+      let currentTaskId = getTaskId task
+          newCtrl = completeTask currentTaskId (appController st)
       modify $ \s -> s { appController = newCtrl }
       updateTaskList
     Nothing -> return ()
@@ -296,13 +289,13 @@ cyclePriority = do
   st <- get
   case listSelectedElement (appTaskList st) of
     Just (_, task) -> do
-      let taskId = getTaskId task
+      let currentTaskId = getTaskId task
           currentPriority = getPriority task
           newPriority = case currentPriority of
             Low -> Medium
             Medium -> High
             High -> Low
-          newCtrl = updateTaskPriority taskId newPriority (appController st)
+          newCtrl = updateTaskPriority currentTaskId newPriority (appController st)
       modify $ \s -> s { appController = newCtrl }
       updateTaskList
     Nothing -> return ()

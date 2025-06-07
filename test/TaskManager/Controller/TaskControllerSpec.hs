@@ -15,13 +15,13 @@ spec = do
 
     it "should complete a task" $ do
       let controller = newController
-      let (controller', taskId) = addTask "Test Task" controller
-      let controller'' = completeTask taskId controller'
-      let tasks = getTasks controller''
-      getStatus (head tasks) `shouldBe` Done
+      let (controller', addedTaskId) = addTask "Test Task" controller
+      let controller'' = completeTask addedTaskId controller'
+      let taskList = getTasks controller''
+      getStatus (head taskList) `shouldBe` Done
 
     it "should delete a task" $ do
       let controller = newController
-      let (controller', taskId) = addTask "Test Task" controller
-      let controller'' = deleteTask taskId controller'
+      let (controller', addedTaskId) = addTask "Test Task" controller
+      let controller'' = deleteTask addedTaskId controller'
       length (getTasks controller'') `shouldBe` 0
