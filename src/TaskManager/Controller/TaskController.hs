@@ -26,62 +26,62 @@ newController :: TaskController
 newController = TaskController [] 1
 
 addTask :: String -> TaskController -> (TaskController, TaskId)
-addTask title controller = 
+addTask taskTitle controller = 
   let newId = nextTaskId controller
-      task = setTaskId newId (newTask title)
+      task = setTaskId newId (newTask taskTitle)
       newTasks = task : tasks controller
-      newController = controller 
+      updatedController = controller 
         { tasks = newTasks
         , nextTaskId = newId + 1
         }
-  in (newController, newId)
+  in (updatedController, newId)
 
 addTaskIO :: String -> TaskController -> IO (TaskController, TaskId)
-addTaskIO title controller = do
+addTaskIO taskTitle controller = do
   currentTime <- getCurrentTime
   let newId = nextTaskId controller
-      task = setTaskId newId (newTaskWithTime title currentTime)
+      task = setTaskId newId (newTaskWithTime taskTitle currentTime)
       newTasks = task : tasks controller
-      newController = controller 
+      updatedController = controller 
         { tasks = newTasks
         , nextTaskId = newId + 1
         }
-  return (newController, newId)
+  return (updatedController, newId)
 
 completeTask :: TaskId -> TaskController -> TaskController
-completeTask taskId controller =
+completeTask targetTaskId controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
-        | getTaskId task == taskId = setStatus Done task
+        | getTaskId task == targetTaskId = setStatus Done task
         | otherwise = task
   in controller { tasks = updatedTasks }
 
 deleteTask :: TaskId -> TaskController -> TaskController
-deleteTask taskId controller =
-  let filteredTasks = filter (\task -> getTaskId task /= taskId) (tasks controller)
+deleteTask targetTaskId controller =
+  let filteredTasks = filter (\task -> getTaskId task /= targetTaskId) (tasks controller)
   in controller { tasks = filteredTasks }
 
 updateTaskPriority :: TaskId -> Priority -> TaskController -> TaskController
-updateTaskPriority taskId priority controller =
+updateTaskPriority targetTaskId newPriority controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
-        | getTaskId task == taskId = setPriority priority task
+        | getTaskId task == targetTaskId = setPriority newPriority task
         | otherwise = task
   in controller { tasks = updatedTasks }
 
 updateTaskStatus :: TaskId -> Status -> TaskController -> TaskController
-updateTaskStatus taskId status controller =
+updateTaskStatus targetTaskId newStatus controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
-        | getTaskId task == taskId = setStatus status task
+        | getTaskId task == targetTaskId = setStatus newStatus task
         | otherwise = task
   in controller { tasks = updatedTasks }
 
 updateTaskTitle :: TaskId -> String -> TaskController -> TaskController
-updateTaskTitle taskId title controller =
+updateTaskTitle targetTaskId newTitle controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
-        | getTaskId task == taskId = setTitle title task
+        | getTaskId task == targetTaskId = setTitle newTitle task
         | otherwise = task
   in controller { tasks = updatedTasks }
 
@@ -89,8 +89,8 @@ getTasks :: TaskController -> [Task]
 getTasks = tasks
 
 getTask :: TaskId -> TaskController -> Maybe Task
-getTask taskId controller = 
-  let matchingTasks = filter (\task -> getTaskId task == taskId) (tasks controller)
+getTask targetTaskId controller = 
+  let matchingTasks = filter (\task -> getTaskId task == targetTaskId) (tasks controller)
   in case matchingTasks of
        (task:_) -> Just task
        []       -> Nothing

@@ -34,39 +34,39 @@ cliLoop controller = do
   input <- getLine
   case parseCommand input of
     Just cmd -> do
-      newController <- handleCommand cmd controller
+      updatedController <- handleCommand cmd controller
       case cmd of
         Quit -> putStrLn "Goodbye!"
-        _    -> cliLoop newController
+        _    -> cliLoop updatedController
     Nothing -> do
       putStrLn "Invalid command. Type 'help' for usage."
       cliLoop controller
 
 handleCommand :: Command -> TaskController -> IO TaskController
 handleCommand cmd controller = case cmd of
-  AddTask title -> do
-    (newController, taskId) <- addTaskIO title controller
-    putStrLn $ "Added task #" ++ show taskId ++ ": " ++ title
-    return newController
+  AddTask taskTitle -> do
+    (updatedController, newTaskId) <- addTaskIO taskTitle controller
+    putStrLn $ "Added task #" ++ show newTaskId ++ ": " ++ taskTitle
+    return updatedController
   
   ListTasks -> do
     displayTasks (getTasks controller)
     return controller
   
-  CompleteTask taskId -> do
-    let newController = completeTask taskId controller
-    putStrLn $ "Completed task #" ++ show taskId
-    return newController
+  CompleteTask targetTaskId -> do
+    let updatedController = completeTask targetTaskId controller
+    putStrLn $ "Completed task #" ++ show targetTaskId
+    return updatedController
   
-  DeleteTask taskId -> do
-    let newController = deleteTask taskId controller
-    putStrLn $ "Deleted task #" ++ show taskId
-    return newController
+  DeleteTask targetTaskId -> do
+    let updatedController = deleteTask targetTaskId controller
+    putStrLn $ "Deleted task #" ++ show targetTaskId
+    return updatedController
   
-  SetPriority taskId priority -> do
-    let newController = updateTaskPriority taskId priority controller
-    putStrLn $ "Set priority of task #" ++ show taskId ++ " to " ++ show priority
-    return newController
+  SetPriority targetTaskId newPriority -> do
+    let updatedController = updateTaskPriority targetTaskId newPriority controller
+    putStrLn $ "Set priority of task #" ++ show targetTaskId ++ " to " ++ show newPriority
+    return updatedController
   
   Help -> do
     putStrLn "Commands:"
@@ -89,9 +89,9 @@ parseCommand input = case words input of
   ["complete", idStr]  -> readTaskId idStr >>= Just . CompleteTask
   ["delete", idStr]    -> readTaskId idStr >>= Just . DeleteTask
   ["priority", idStr, priorityStr] -> do
-    taskId <- readTaskId idStr
-    priority <- Priority.fromString priorityStr
-    return $ SetPriority taskId priority
+    targetTaskId <- readTaskId idStr
+    taskPriority <- Priority.fromString priorityStr
+    return $ SetPriority targetTaskId taskPriority
   ["help"]             -> Just Help
   ["quit"]             -> Just Quit
   []                   -> Nothing
@@ -104,7 +104,7 @@ readTaskId s = case reads s of
 
 displayTasks :: [Task] -> IO ()
 displayTasks [] = putStrLn "No tasks found."
-displayTasks tasks = mapM_ displayTask tasks
+displayTasks taskList = mapM_ displayTask taskList
 
 displayTask :: Task -> IO ()
 displayTask task = do
