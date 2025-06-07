@@ -1,7 +1,7 @@
 {
   // Haskell Language Server configuration
-  "haskell.manageHLS": "GHCup",
-  "haskell.serverExecutablePath": "",
+  "haskell.manageHLS": "PATH",
+  "haskell.serverExecutablePath": "/opt/homebrew/bin/haskell-language-server-wrapper",
   "haskell.serverExtraArgs": "",
   
   // Enable detailed diagnostics
