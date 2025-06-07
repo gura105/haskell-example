@@ -1,0 +1,8 @@
+cradle:
+  cabal:
+    - path: "./src"
+      component: "lib:haskell-example"
+    - path: "./app"
+      component: "exe:task-manager"
+    - path: "./test"
+      component: "test:task-manager-test"

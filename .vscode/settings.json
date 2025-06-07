@@ -1,0 +1,75 @@
+{
+  // Haskell Language Server configuration
+  "haskell.manageHLS": "GHCup",
+  "haskell.serverExecutablePath": "haskell-language-server-wrapper",
+  "haskell.serverExtraArgs": "",
+  
+  // Enable detailed diagnostics
+  "haskell.maxNumberOfProblems": 100,
+  "haskell.diagnosticsOnChange": true,
+  
+  // Code formatting
+  "haskell.formattingProvider": "ormolu",
+  "editor.formatOnSave": false,
+  
+  // File associations for Haskell
+  "files.associations": {
+    "*.hs": "haskell",
+    "*.lhs": "literate-haskell",
+    "*.cabal": "cabal"
+  },
+  
+  // Editor settings for Haskell files
+  "[haskell]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
+    "editor.rulers": [80, 100],
+    "editor.semanticHighlighting.enabled": true
+  },
+  
+  // Search settings
+  "search.exclude": {
+    "**/dist-newstyle/**": true,
+    "**/.stack-work/**": true,
+    "**/node_modules/**": true
+  },
+  
+  // File watcher settings
+  "files.watcherExclude": {
+    "**/dist-newstyle/**": true,
+    "**/.stack-work/**": true
+  },
+  
+  // Terminal integration
+  "terminal.integrated.env.osx": {
+    "PATH": "${env:PATH}:${env:HOME}/.ghcup/bin:${env:HOME}/.local/bin"
+  },
+  
+  // HLint integration
+  "haskell.plugin.hlint.diagnosticsOnChange": true,
+  "haskell.plugin.hlint.codeActionsOn": true,
+  
+  // Import management
+  "haskell.plugin.importLens.codeActionsOn": true,
+  "haskell.plugin.importLens.codeLensOn": true,
+  
+  // Type information
+  "haskell.plugin.tactics.codeActionsOn": true,
+  "haskell.plugin.tactics.codeLensOn": true,
+  
+  // Pragmas
+  "haskell.plugin.pragmas.codeActionsOn": true,
+  "haskell.plugin.pragmas.completionOn": true,
+  
+  // Module name suggestions
+  "haskell.plugin.moduleName.globalOn": true,
+  
+  // Enable all useful plugins
+  "haskell.plugin.ghcide-completions.globalOn": true,
+  "haskell.plugin.ghcide-hover-and-symbols.globalOn": true,
+  "haskell.plugin.ghcide-code-actions-fill-holes.globalOn": true,
+  "haskell.plugin.ghcide-code-actions-imports-exports.globalOn": true,
+  "haskell.plugin.ghcide-code-actions-type-signatures.globalOn": true
+}

@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "haskell.haskell",
+    "justusadam.language-haskell",
+    "dramforever.vscode-ghc-simple",
+    "phoityne.phoityne-vscode"
+  ],
+  "unwantedRecommendations": []
+}

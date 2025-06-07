@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cabal build",
+      "type": "shell",
+      "command": "cabal",
+      "args": ["build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "cabal test",
+      "type": "shell",
+      "command": "cabal",
+      "args": ["test", "--test-show-details=direct"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"]
+    },
+    {
+      "label": "hlint check",
+      "type": "shell",
+      "command": "hlint",
+      "args": ["src", "app", "test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "run TUI",
+      "type": "shell",
+      "command": "cabal",
+      "args": ["run", "task-manager"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "new"
+      }
+    },
+    {
+      "label": "run CLI",
+      "type": "shell",
+      "command": "cabal",
+      "args": ["run", "task-manager", "--", "--cli"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "new"
+      }
+    },
+    {
+      "label": "make dev",
+      "type": "shell",
+      "command": "make",
+      "args": ["dev"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"]
+    }
+  ]
+}

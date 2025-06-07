@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Task Manager (TUI)",
+      "type": "ghc",
+      "request": "launch",
+      "program": "${workspaceFolder}/dist-newstyle/build/aarch64-osx/ghc-9.6.7/haskell-example-0.1.0.0/x/task-manager/build/task-manager/task-manager",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cabal build"
+    },
+    {
+      "name": "Debug Task Manager (CLI)",
+      "type": "ghc",
+      "request": "launch",
+      "program": "${workspaceFolder}/dist-newstyle/build/aarch64-osx/ghc-9.6.7/haskell-example-0.1.0.0/x/task-manager/build/task-manager/task-manager",
+      "args": ["--cli"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cabal build"
+    }
+  ]
+}

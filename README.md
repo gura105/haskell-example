@@ -13,6 +13,45 @@ Haskellで構築された型安全なタスク管理コマンドラインアプ�
 - **状態追跡**: Todo、進行中、完了の状態管理
 - **日本語対応**: 完全な日本語インターフェース
 
+## 開発環境
+
+### VSCode IDE サポート
+
+このプロジェクトは VSCode での開発に最適化されています：
+
+#### 必要な拡張機能
+- `haskell.haskell` (Haskell Language Server)
+- `justusadam.language-haskell` (Haskell Syntax)
+
+#### IDE機能
+- ✅ **コードジャンプ**: 関数定義へのジャンプ（F12）
+- ✅ **参照検索**: 変数・関数の使用箇所検索（Shift+F12）
+- ✅ **型情報表示**: ホバーで型情報表示
+- ✅ **自動補完**: インテリジェントなコード補完
+- ✅ **リアルタイム診断**: HLintとGHCエラー表示
+- ✅ **コードアクション**: 自動インポート、型注釈追加
+- ✅ **シンボル検索**: ワークスペース全体での検索（Ctrl+T）
+- ✅ **リファクタリング**: 安全な名前変更
+
+#### セットアップ手順
+```bash
+# 1. VSCodeで拡張機能をインストール
+# 2. プロジェクトを開く
+code .
+
+# 3. Haskell Language Serverが自動で起動
+# 4. 依存関係の解決（初回のみ時間がかかります）
+```
+
+#### ビルドタスク
+VSCodeで `Ctrl+Shift+P` → `Tasks: Run Task` で以下が利用可能：
+- `cabal build` - プロジェクトビルド
+- `cabal test` - テスト実行
+- `hlint check` - リンターチェック
+- `make dev` - ビルド・テスト・リント一括実行
+- `run TUI` - TUIモード実行
+- `run CLI` - CLIモード実行
+
 ## アーキテクチャ
 
 ```
@@ -35,6 +74,7 @@ src/
 - [GHCup](https://www.haskell.org/ghcup/) (Haskellツールチェーンインストーラー)
 - GHC 9.6.7+
 - Cabal 3.12+
+- Haskell Language Server (IDE機能用)
 
 ### セットアップ
 
@@ -42,6 +82,9 @@ src/
 # Haskellツールチェーンをインストール
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 source ~/.ghcup/env
+
+# Haskell Language Server をインストール (IDE機能用)
+ghcup install hls
 
 # リポジトリをクローン
 git clone https://github.com/gura105/haskell-example.git
@@ -202,8 +245,50 @@ setPriority :: Priority -> Task -> Task
 - **純粋関数**: 不変データ構造と参照透明性
 - **修飾インポート**: 名前空間の競合回避
 - **包括的テスト**: プロパティベーステストを用いたTDDアプローチ
+- **リンティング**: HLintによるコード品質管理
 
-### ビルド
+### ビルドとリンティング
+
+```bash
+# 基本的な開発ワークフロー
+make dev              # ビルド、テスト、リント実行
+
+# 個別の操作
+make build           # プロジェクトをビルド
+make test            # テストを実行  
+make lint            # HLintでコード品質チェック (HTML レポート付き)
+make lint-quick      # 迅速なリントチェック
+
+# アプリケーション実行
+make run-tui         # TUIモードで実行
+make run-cli         # CLIモードで実行
+
+# クリーンアップ
+make clean           # ビルド成果物を削除
+
+# ヘルプ
+make help            # 利用可能なコマンドを表示
+```
+
+### リンティング
+
+このプロジェクトはHLintを使用してコード品質を管理しています：
+
+```bash
+# リンティングの実行
+hlint src app test
+
+# 設定ファイル
+.hlint.yaml          # HLint設定（プロジェクトルート）
+```
+
+HLintは以下をチェックします：
+- コードの簡略化提案
+- 不要なインポートや変数
+- より良いHaskellイディオムの提案
+- カスタムルールに基づく警告
+
+### 従来のCabalコマンド
 
 ```bash
 # クリーンビルド
@@ -240,8 +325,9 @@ ghcid
 2. 機能ブランチを作成
 3. 新機能のテストを記述
 4. 機能を実装
-5. すべてのテストが通ることを確認
-6. プルリクエストを送信
+5. `make dev`でローカルチェック実行
+6. すべてのテストとリンターが通ることを確認
+7. プルリクエストを送信
 
 ## ライセンス
 
