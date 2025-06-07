@@ -87,6 +87,48 @@
         "panel": "shared"
       },
       "problemMatcher": ["$haskell-ghc"]
+    },
+    {
+      "label": "GHC warnings",
+      "type": "shell",
+      "command": "make",
+      "args": ["ghc-warnings"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"]
+    },
+    {
+      "label": "GHC strict (warnings as errors)",
+      "type": "shell",
+      "command": "make",
+      "args": ["ghc-strict"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"]
+    },
+    {
+      "label": "All linters",
+      "type": "shell",
+      "command": "make",
+      "args": ["lint"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$haskell-ghc"]
     }
   ]
 }
