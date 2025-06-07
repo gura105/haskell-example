@@ -1,7 +1,7 @@
 {
   // Haskell Language Server configuration
   "haskell.manageHLS": "GHCup",
-  "haskell.serverExecutablePath": "haskell-language-server-wrapper",
+  "haskell.serverExecutablePath": "",
   "haskell.serverExtraArgs": "",
   
   // Enable detailed diagnostics
@@ -42,9 +42,9 @@
     "**/.stack-work/**": true
   },
   
-  // Terminal integration
+  // Terminal integration - put ghcup first in PATH
   "terminal.integrated.env.osx": {
-    "PATH": "${env:PATH}:${env:HOME}/.ghcup/bin:${env:HOME}/.local/bin"
+    "PATH": "${env:HOME}/.ghcup/bin:${env:HOME}/.local/bin:${env:PATH}"
   },
   
   // HLint integration
