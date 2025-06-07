@@ -1,118 +1,118 @@
-# Task Manager CLI
+# タスク管理CLI
 
-A type-safe task management command-line application built with Haskell, demonstrating functional programming principles and Test-Driven Development (TDD).
+Haskellで構築された型安全なタスク管理コマンドラインアプリケーション。関数型プログラミングの原則とテスト駆動開発（TDD）を実践しています。
 
-## Features
+## 特徴
 
-- **Type-Safe Design**: Leverages Haskell's type system to prevent runtime errors
-- **MVC Architecture**: Clean separation of Model, View, and Controller layers
-- **Test-Driven Development**: Comprehensive unit test coverage with HSpec
-- **CLI Interface**: Interactive command-line interface for task management
-- **Priority System**: Low, Medium, High priority levels with proper ordering
-- **Status Tracking**: Todo, In-Progress, Done status management
+- **型安全設計**: Haskellの型システムを活用してランタイムエラーを防止
+- **MVCアーキテクチャ**: Model、View、Controllerレイヤーの明確な分離
+- **テスト駆動開発**: HSpecによる包括的な単体テストカバレッジ
+- **CLIインターフェース**: タスク管理のためのインタラクティブなコマンドライン
+- **優先度システム**: Low、Medium、Highの優先度レベルと適切な順序付け
+- **状態追跡**: Todo、進行中、完了の状態管理
 
-## Architecture
+## アーキテクチャ
 
 ```
 src/
 ├── TaskManager/
-│   ├── Model/          # Domain models (Task, Priority, Status)
-│   ├── Controller/     # Business logic (TaskController)
-│   ├── View/          # CLI interface and user interaction
-│   └── Persistence/   # File storage layer
-├── app/Main.hs        # Application entry point
-└── test/              # Unit tests
+│   ├── Model/          # ドメインモデル (Task, Priority, Status)
+│   ├── Controller/     # ビジネスロジック (TaskController)
+│   ├── View/          # CLIインターフェースとユーザー操作
+│   └── Persistence/   # ファイルストレージ層
+├── app/Main.hs        # アプリケーションエントリーポイント
+└── test/              # 単体テスト
 ```
 
-## Installation
+## インストール
 
-### Prerequisites
+### 前提条件
 
-- [GHCup](https://www.haskell.org/ghcup/) (Haskell toolchain installer)
+- [GHCup](https://www.haskell.org/ghcup/) (Haskellツールチェーンインストーラー)
 - GHC 9.6.7+
 - Cabal 3.12+
 
-### Setup
+### セットアップ
 
 ```bash
-# Install Haskell toolchain
+# Haskellツールチェーンをインストール
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 source ~/.ghcup/env
 
-# Clone the repository
+# リポジトリをクローン
 git clone https://github.com/gura105/haskell-example.git
 cd haskell-example
 
-# Build the project
+# プロジェクトをビルド
 cabal build
 
-# Run tests
+# テストを実行
 cabal test
 ```
 
-## Usage
+## 使用方法
 
-### Run the CLI Application
+### CLIアプリケーションの実行
 
 ```bash
 cabal run task-manager
 ```
 
-### Available Commands
+### 利用可能なコマンド
 
 ```
-add <title>           - Add a new task
-list                  - List all tasks
-complete <id>         - Mark task as completed
-delete <id>           - Delete a task
-priority <id> <level> - Set task priority (low/medium/high)
-help                  - Show help
-quit                  - Exit the program
+add <タイトル>          - 新しいタスクを追加
+list                   - すべてのタスクを一覧表示
+complete <id>          - タスクを完了としてマーク
+delete <id>            - タスクを削除
+priority <id> <レベル>  - タスクの優先度を設定 (low/medium/high)
+help                   - ヘルプを表示
+quit                   - プログラムを終了
 ```
 
-### Example Session
+### 使用例
 
 ```
 Task Manager CLI
 Type 'help' for commands
-> add "Learn Haskell"
-Added task #1: Learn Haskell
-> add "Write unit tests"
-Added task #2: Write unit tests
+> add "Haskellを学ぶ"
+Added task #1: Haskellを学ぶ
+> add "単体テストを書く"
+Added task #2: 単体テストを書く
 > priority 2 high
 Set priority of task #2 to High
 > list
-[ ] #1 (M) Learn Haskell
-[ ] #2 (H) Write unit tests
+[ ] #1 (M) Haskellを学ぶ
+[ ] #2 (H) 単体テストを書く
 > complete 1
 Completed task #1
 > list
-[✓] #1 (M) Learn Haskell
-[ ] #2 (H) Write unit tests
+[✓] #1 (M) Haskellを学ぶ
+[ ] #2 (H) 単体テストを書く
 ```
 
-## Testing
+## テスト
 
-The project follows Test-Driven Development with comprehensive unit tests:
+このプロジェクトは包括的な単体テストを伴うテスト駆動開発に従っています：
 
 ```bash
-# Run all tests
+# すべてのテストを実行
 cabal test
 
-# Build and test in one command
+# ビルドとテストを一括実行
 cabal build && cabal test
 ```
 
-### Test Coverage
+### テストカバレッジ
 
-- **Priority**: Ordering and string parsing
-- **Status**: State transitions and parsing
-- **Task**: Creation, updates, and property getters
-- **TaskController**: CRUD operations and business logic
+- **Priority**: 順序付けと文字列解析
+- **Status**: 状態遷移と解析
+- **Task**: 作成、更新、プロパティゲッター
+- **TaskController**: CRUD操作とビジネスロジック
 
-## Type Safety Features
+## 型安全機能
 
-### Domain Models
+### ドメインモデル
 
 ```haskell
 data Priority = Low | Medium | High
@@ -130,71 +130,71 @@ data Task = Task
   } deriving (Show, Eq, Read)
 ```
 
-### Type-Safe Operations
+### 型安全な操作
 
 ```haskell
--- Type-safe task creation
+-- 型安全なタスク作成
 newTask :: String -> Task
 
--- Type-safe status updates
+-- 型安全な状態更新
 setStatus :: Status -> Task -> Task
 
--- Type-safe priority management
+-- 型安全な優先度管理
 setPriority :: Priority -> Task -> Task
 ```
 
-## Development
+## 開発
 
-### Project Structure
+### プロジェクト構造
 
-This project demonstrates several Haskell best practices:
+このプロジェクトはいくつかのHaskellベストプラクティスを実証しています：
 
-- **MVC Architecture**: Clear separation of concerns
-- **Type Safety**: Compile-time guarantees for business logic
-- **Pure Functions**: Immutable data structures and referential transparency
-- **Qualified Imports**: Avoiding namespace conflicts
-- **Comprehensive Testing**: TDD approach with property-based testing
+- **MVCアーキテクチャ**: 関心の明確な分離
+- **型安全性**: ビジネスロジックのコンパイル時保証
+- **純粋関数**: 不変データ構造と参照透明性
+- **修飾インポート**: 名前空間の競合回避
+- **包括的テスト**: プロパティベーステストを用いたTDDアプローチ
 
-### Building
+### ビルド
 
 ```bash
-# Clean build
+# クリーンビルド
 cabal clean && cabal build
 
-# Build with warnings
+# 警告付きビルド
 cabal build --ghc-options="-Wall"
 
-# Watch mode (requires ghcid)
+# ウォッチモード（ghcidが必要）
 ghcid
 ```
 
-## Dependencies
+## 依存関係
 
-- **base**: Core Haskell libraries
-- **time**: Date and time handling
-- **aeson**: JSON parsing (for future persistence)
-- **text**: Efficient text processing
-- **hspec**: Testing framework
-- **QuickCheck**: Property-based testing
+- **base**: 核となるHaskellライブラリ
+- **time**: 日付と時刻の処理
+- **aeson**: JSON解析（将来の永続化用）
+- **text**: 効率的なテキスト処理
+- **hspec**: テストフレームワーク
+- **QuickCheck**: プロパティベーステスト
 
-## Contributing
+## 貢献
 
-1. Fork the repository
-2. Create a feature branch
-3. Write tests for new functionality
-4. Implement the feature
-5. Ensure all tests pass
-6. Submit a pull request
+1. リポジトリをフォーク
+2. 機能ブランチを作成
+3. 新機能のテストを記述
+4. 機能を実装
+5. すべてのテストが通ることを確認
+6. プルリクエストを送信
 
-## License
+## ライセンス
 
 MIT License
 
-## Future Enhancements
+## 今後の拡張予定
 
-- [ ] JSON file persistence
-- [ ] Task due dates and reminders
-- [ ] Task categories and tags
-- [ ] Export/import functionality
-- [ ] Configuration file support
-- [ ] Color-coded output
+- [ ] JSONファイル永続化
+- [ ] タスクの期限と リマインダー
+- [ ] タスクカテゴリとタグ
+- [ ] エクスポート/インポート機能
+- [ ] 設定ファイルサポート
+- [ ] カラーコード化された出力
