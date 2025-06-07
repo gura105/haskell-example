@@ -1,5 +1,5 @@
 module TaskManager.Model.Task
-  ( Task
+  ( Task(..)
   , TaskId
   , newTask
   , newTaskWithTime
@@ -11,6 +11,7 @@ module TaskManager.Model.Task
   , setStatus
   , setPriority
   , setTitle
+  , setTaskId
   ) where
 
 import Data.Time
@@ -25,7 +26,7 @@ data Task = Task
   , status     :: Status
   , priority   :: Priority
   , createdAt  :: UTCTime
-  } deriving (Show, Eq)
+  } deriving (Show, Eq, Read)
 
 newTask :: String -> Task
 newTask t = Task
@@ -68,3 +69,6 @@ setPriority p task = task { priority = p }
 
 setTitle :: String -> Task -> Task
 setTitle t task = task { title = t }
+
+setTaskId :: TaskId -> Task -> Task
+setTaskId newId task = task { taskId = newId }

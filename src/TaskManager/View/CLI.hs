@@ -7,7 +7,8 @@ module TaskManager.View.CLI
   ) where
 
 import TaskManager.Model.Task
-import TaskManager.Model.Priority
+import qualified TaskManager.Model.Priority as Priority
+import TaskManager.Model.Priority (Priority(..))
 import TaskManager.Model.Status
 import TaskManager.Controller.TaskController
 
@@ -89,7 +90,7 @@ parseCommand input = case words input of
   ["delete", idStr]    -> readTaskId idStr >>= Just . DeleteTask
   ["priority", idStr, priorityStr] -> do
     taskId <- readTaskId idStr
-    priority <- fromString priorityStr
+    priority <- Priority.fromString priorityStr
     return $ SetPriority taskId priority
   ["help"]             -> Just Help
   ["quit"]             -> Just Quit

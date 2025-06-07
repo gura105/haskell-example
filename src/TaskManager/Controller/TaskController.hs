@@ -18,33 +18,33 @@ import TaskManager.Model.Status
 data TaskController = TaskController
   { tasks      :: [Task]
   , nextTaskId :: TaskId
-  } deriving (Show)
+  } deriving (Show, Read)
 
 newController :: TaskController
 newController = TaskController [] 1
 
 addTask :: String -> TaskController -> (TaskController, TaskId)
 addTask title controller = 
-  let taskId = nextTaskId controller
-      task = (newTask title) { taskId = taskId }
+  let newId = nextTaskId controller
+      task = setTaskId newId (newTask title)
       newTasks = task : tasks controller
       newController = controller 
         { tasks = newTasks
-        , nextTaskId = taskId + 1
+        , nextTaskId = newId + 1
         }
-  in (newController, taskId)
+  in (newController, newId)
 
 addTaskIO :: String -> TaskController -> IO (TaskController, TaskId)
 addTaskIO title controller = do
   currentTime <- getCurrentTime
-  let taskId = nextTaskId controller
-      task = (newTaskWithTime title currentTime) { taskId = taskId }
+  let newId = nextTaskId controller
+      task = setTaskId newId (newTaskWithTime title currentTime)
       newTasks = task : tasks controller
       newController = controller 
         { tasks = newTasks
-        , nextTaskId = taskId + 1
+        , nextTaskId = newId + 1
         }
-  return (newController, taskId)
+  return (newController, newId)
 
 completeTask :: TaskId -> TaskController -> TaskController
 completeTask taskId controller =

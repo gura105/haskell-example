@@ -1,11 +1,11 @@
 module TaskManager.Model.TaskSpec (spec) where
 
 import Test.Hspec
-import Test.QuickCheck
-import Data.Time
 import TaskManager.Model.Task
-import TaskManager.Model.Priority
-import TaskManager.Model.Status
+import qualified TaskManager.Model.Priority as Priority
+import TaskManager.Model.Priority (Priority(..))
+import qualified TaskManager.Model.Status as Status
+import TaskManager.Model.Status (Status(..))
 
 spec :: Spec
 spec = do
@@ -16,17 +16,17 @@ spec = do
       Low < High `shouldBe` True
 
     it "should parse from string correctly" $ do
-      fromString "low" `shouldBe` Just Low
-      fromString "medium" `shouldBe` Just Medium
-      fromString "high" `shouldBe` Just High
-      fromString "invalid" `shouldBe` Nothing
+      Priority.fromString "low" `shouldBe` Just Low
+      Priority.fromString "medium" `shouldBe` Just Medium
+      Priority.fromString "high" `shouldBe` Just High
+      Priority.fromString "invalid" `shouldBe` Nothing
 
   describe "Status" $ do
     it "should parse from string correctly" $ do
-      fromString "todo" `shouldBe` Just Todo
-      fromString "in-progress" `shouldBe` Just InProgress
-      fromString "done" `shouldBe` Just Done
-      fromString "invalid" `shouldBe` Nothing
+      Status.fromString "todo" `shouldBe` Just Todo
+      Status.fromString "in-progress" `shouldBe` Just InProgress
+      Status.fromString "done" `shouldBe` Just Done
+      Status.fromString "invalid" `shouldBe` Nothing
 
   describe "Task" $ do
     it "should create a new task with default values" $ do

@@ -24,18 +24,18 @@ library
         TaskManager.View.CLI
         TaskManager.Persistence.FileStore
     build-depends:
-        base ^>=4.14,
-        aeson ^>=2.0,
-        time ^>=1.9,
-        bytestring ^>=0.11,
-        text ^>=1.2
+        base >= 4.14 && < 5,
+        aeson >= 2.0 && < 3,
+        time >= 1.9 && < 2,
+        bytestring >= 0.11 && < 1,
+        text >= 1.2 && < 3
 
 executable task-manager
     import: common-options
     main-is: Main.hs
     hs-source-dirs: app
     build-depends:
-        base ^>=4.14,
+        base >= 4.14 && < 5,
         haskell-example
 
 test-suite task-manager-test
@@ -47,7 +47,8 @@ test-suite task-manager-test
         TaskManager.Model.TaskSpec
         TaskManager.Controller.TaskControllerSpec
     build-depends:
-        base ^>=4.14,
+        base >= 4.14 && < 5,
         haskell-example,
-        hspec ^>=2.7,
-        QuickCheck ^>=2.14
+        hspec >= 2.7 && < 3,
+        QuickCheck >= 2.14 && < 3,
+        time >= 1.9 && < 2
