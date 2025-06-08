@@ -3,6 +3,8 @@ module TaskManager.Model.Task
   , TaskId
   , newTask
   , newTaskWithTime
+  , emptyTask
+  , updateTask
   , getTitle
   , getStatus
   , getPriority
@@ -28,23 +30,26 @@ data Task = Task
   , createdAt  :: UTCTime
   } deriving (Show, Eq, Read)
 
-newTask :: String -> Task
-newTask t = Task
-  { taskId = 0  -- Will be assigned by controller
-  , title = t
+emptyTask :: Task
+emptyTask = Task
+  { taskId = 0
+  , title = ""
   , status = Todo
   , priority = Medium
-  , createdAt = UTCTime (fromGregorian 1970 1 1) 0  -- Will be set properly
+  , createdAt = UTCTime (fromGregorian 1970 1 1) 0
   }
 
+newTask :: String -> Task
+newTask t = emptyTask { title = t }
+
 newTaskWithTime :: String -> UTCTime -> Task
-newTaskWithTime t time = Task
-  { taskId = 0  -- Will be assigned by controller
-  , title = t
-  , status = Todo
-  , priority = Medium
+newTaskWithTime t time = emptyTask 
+  { title = t
   , createdAt = time
   }
+
+updateTask :: (Task -> Task) -> Task -> Task
+updateTask f = f
 
 getTitle :: Task -> String
 getTitle = title

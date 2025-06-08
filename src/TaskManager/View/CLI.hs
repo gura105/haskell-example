@@ -4,12 +4,15 @@ module TaskManager.View.CLI
   , displayTasks
   , parseCommand
   , Command(..)
+  , formatTask
+  , formatStatus
+  , formatPriority
   ) where
 
 import TaskManager.Model.Task
 import qualified TaskManager.Model.Priority as Priority
 import TaskManager.Model.Priority (Priority(..))
-import TaskManager.Model.Status
+import TaskManager.Model.Status (Status(..))
 import TaskManager.Controller.TaskController
 
 data Command
@@ -107,14 +110,19 @@ displayTasks [] = putStrLn "No tasks found."
 displayTasks taskList = mapM_ displayTask taskList
 
 displayTask :: Task -> IO ()
-displayTask task = do
-  let statusStr = case getStatus task of
-        Todo       -> "[ ]"
-        InProgress -> "[~]"
-        Done       -> "[✓]"
-  let priorityStr = case getPriority task of
-        Low    -> "L"
-        Medium -> "M"
-        High   -> "H"
-  putStrLn $ statusStr ++ " #" ++ show (getTaskId task) 
-           ++ " (" ++ priorityStr ++ ") " ++ getTitle task
+displayTask task = putStrLn $ formatTask task
+
+formatTask :: Task -> String
+formatTask task = 
+  formatStatus (getStatus task) ++ " #" ++ show (getTaskId task) 
+    ++ " (" ++ formatPriority (getPriority task) ++ ") " ++ getTitle task
+
+formatStatus :: Status -> String
+formatStatus Todo       = "[ ]"
+formatStatus InProgress = "[~]"
+formatStatus Done       = "[✓]"
+
+formatPriority :: Priority -> String
+formatPriority Low    = "L"
+formatPriority Medium = "M"
+formatPriority High   = "H"

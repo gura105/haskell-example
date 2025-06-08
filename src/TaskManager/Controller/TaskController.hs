@@ -8,11 +8,15 @@ module TaskManager.Controller.TaskController
   , updateTaskPriority
   , updateTaskStatus
   , updateTaskTitle
+  , updateTaskInController
   , getTasks
   , getTask
+  , findTaskById
+  , mapTasks
   ) where
 
 import Data.Time
+import Data.List (find)
 import TaskManager.Model.Task
 import TaskManager.Model.Priority
 import TaskManager.Model.Status
@@ -49,48 +53,42 @@ addTaskIO taskTitle controller = do
   return (updatedController, newId)
 
 completeTask :: TaskId -> TaskController -> TaskController
-completeTask targetTaskId controller =
-  let updatedTasks = map updateIfMatch (tasks controller)
-      updateIfMatch task
-        | getTaskId task == targetTaskId = setStatus Done task
-        | otherwise = task
-  in controller { tasks = updatedTasks }
+completeTask targetTaskId = updateTaskStatus targetTaskId Done
 
 deleteTask :: TaskId -> TaskController -> TaskController
 deleteTask targetTaskId controller =
   let filteredTasks = filter (\task -> getTaskId task /= targetTaskId) (tasks controller)
   in controller { tasks = filteredTasks }
 
-updateTaskPriority :: TaskId -> Priority -> TaskController -> TaskController
-updateTaskPriority targetTaskId newPriority controller =
+updateTaskInController :: TaskId -> (Task -> Task) -> TaskController -> TaskController
+updateTaskInController targetTaskId updateFunc controller =
   let updatedTasks = map updateIfMatch (tasks controller)
       updateIfMatch task
-        | getTaskId task == targetTaskId = setPriority newPriority task
+        | getTaskId task == targetTaskId = updateFunc task
         | otherwise = task
   in controller { tasks = updatedTasks }
+
+updateTaskPriority :: TaskId -> Priority -> TaskController -> TaskController
+updateTaskPriority targetTaskId newPriority = 
+  updateTaskInController targetTaskId (setPriority newPriority)
 
 updateTaskStatus :: TaskId -> Status -> TaskController -> TaskController
-updateTaskStatus targetTaskId newStatus controller =
-  let updatedTasks = map updateIfMatch (tasks controller)
-      updateIfMatch task
-        | getTaskId task == targetTaskId = setStatus newStatus task
-        | otherwise = task
-  in controller { tasks = updatedTasks }
+updateTaskStatus targetTaskId newStatus = 
+  updateTaskInController targetTaskId (setStatus newStatus)
 
 updateTaskTitle :: TaskId -> String -> TaskController -> TaskController
-updateTaskTitle targetTaskId newTitle controller =
-  let updatedTasks = map updateIfMatch (tasks controller)
-      updateIfMatch task
-        | getTaskId task == targetTaskId = setTitle newTitle task
-        | otherwise = task
-  in controller { tasks = updatedTasks }
+updateTaskTitle targetTaskId newTitle = 
+  updateTaskInController targetTaskId (setTitle newTitle)
 
 getTasks :: TaskController -> [Task]
 getTasks = tasks
 
 getTask :: TaskId -> TaskController -> Maybe Task
-getTask targetTaskId controller = 
-  let matchingTasks = filter (\task -> getTaskId task == targetTaskId) (tasks controller)
-  in case matchingTasks of
-       (task:_) -> Just task
-       []       -> Nothing
+getTask = findTaskById
+
+findTaskById :: TaskId -> TaskController -> Maybe Task
+findTaskById targetTaskId controller =
+  find (\task -> getTaskId task == targetTaskId) (tasks controller)
+
+mapTasks :: (Task -> Task) -> TaskController -> TaskController
+mapTasks f controller = controller { tasks = map f (tasks controller) }
